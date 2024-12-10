@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Approve Event</title>
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+<div class="row justify-content-center">
+    <div class="col-sm-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Approve {{ event.name }}</h6>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'approve_event' event.id %}" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="search-client" class="form-label">Search Client</label>
+                        <input
+                            type="text"
+                            id="search-client"
+                            class="form-control"
+                            placeholder="Search for a client by name or email"
+                            onkeyup="searchClient(this.value)">
+                        
+                        <select
+                            id="client-results"
+                            class="form-select mt-2 w-100"
+                            name="client">
+                            <option value="" selected>Select a client</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Approve Event</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchClient(query) {
+        // Fetch client results dynamically from a backend endpoint
+        fetch(`/search-clients/?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                const clientResults = document.getElementById('client-results');
+                clientResults.innerHTML = ''; // Clear previous results
+                
+                if (data.length > 0) {
+                    // Display fetched clients
+                    data.forEach(client => {
+                        const option = document.createElement('option');
+                        option.value = client.id;
+                        option.textContent = `${client.name} - ${client.email}`;
+                        clientResults.appendChild(option);
+                    });
+                } else {
+                    // Display "No results" message if no clients found
+                    const noResults = document.createElement('option');
+                    noResults.textContent = 'No clients found';
+                    noResults.disabled = true;
+                    clientResults.appendChild(noResults);
+                }
+            })
+            .catch(error => console.error('Error fetching clients:', error));
+    }
+</script>
+
+{% endblock %}

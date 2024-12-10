@@ -1,0 +1,162 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'login_assets/css/style.css' %}">
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Lato', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .login-wrap {
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px; /* Increased max width */
+            padding: 20px 30px; /* Added padding to prevent cutting */
+            overflow: hidden;
+        }
+
+        .login-wrap .img {
+            height: 200px; /* Increased height for a better visual effect */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-wrap h3 {
+            font-size: 28px; /* Larger heading for better balance */
+            font-weight: 700;
+        }
+
+        .form-control {
+            border: 1px solid #ced4da;
+            padding: 15px 20px; /* Increased padding for more comfort */
+            height: auto;
+            border-radius: 25px;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            border: none;
+            padding: 15px 20px; /* Slightly increased button size */
+            border-radius: 25px;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        .icon {
+            background: #007bff;
+            color: white;
+            height: 50px; /* Larger icon for better proportionality */
+            width: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px; /* Added spacing between inputs */
+        }
+
+        .form-group .icon {
+            position: absolute;
+            left: 20px;
+        }
+
+        .form-group input {
+            padding-left: 70px; /* Adjusted padding to match the larger icon */
+        }
+
+        .text {
+            color: #6c757d;
+        }
+
+        .text a {
+            color: #007bff;
+        }
+
+        .fa-facebook {
+            margin-left: 10px;
+            color: #3b5998;
+            font-size: 20px;
+        }
+
+        .ftco-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<section class="ftco-section">
+    <div class="login-wrap py-5">
+        <div class="img d-flex align-items-center justify-content-center"
+             style="background-image: url({% static 'login_assets/images/bg.jpg' %});"></div>
+        <h3 class="text-center mb-0">BlissBlend Event Managers</h3>
+        <p class="text-center">Sign in</p>
+        <form action="{% url 'login' %}" class="login-form" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+{#                <div class="icon d-flex align-items-center justify-content-center"><span#}
+{#                        class="fa fa-user"></span></div>#}
+                 <label for="password" class="form-label">Username/Email</label> 
+                <input type="text" name="username" class="form-control" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+{#                <div class="icon d-flex align-items-center justify-content-center"><span#}
+{#                        class="fa fa-lock"></span></div>#}
+                <label for="password" class="form-label">Password</label> 
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn form-control btn-primary rounded submit px-3">Get Started</button>
+            </div>
+        </form>
+        <div class="w-100 text-center mt-4 text">
+            <p class="mb-0">Don't have an account?</p>
+            <a href="{% url 'signup' %}" class="btn btn-link">Sign Up/Register</a>
+            <a href="https://facebook.com" target="_blank">
+                <i class="fa fa-facebook"></i> Facebook
+            </a>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'login_assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'login_assets/js/popper.js' %}"></script>
+<script src="{% static 'login_assets/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'login_assets/js/main.js' %}"></script>
+
+</body>
+</html>

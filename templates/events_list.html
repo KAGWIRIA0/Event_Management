@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Events List</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="mb-3">Events List</h2>
+
+        <!-- Display success message -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Action Buttons -->
+        <div class="mb-3">
+            <a href="{% url 'create_event' %}" class="btn btn-primary">Create Event</a>
+        </div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Client Id</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Cost</th>
+                    <th>Number of Guests</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Client Id</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Cost</th>
+                    <th>Number of Guests</th>
+                    <th>Actions</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.event_name }}</td>
+                        <td>{{ event.client_id }}</td>
+                        <td>{{ event.location }}</td>
+                        <td>{{ event.status }}</td>
+                        <td>{{ event.amount }}</td>
+                        <td>{{ event.number_of_guests }}</td>
+                        <td>
+                            <form action="{% url 'approve_event' event.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-success">Approve</button>
+                            </form>
+                            <a href="{% url 'edit_event' event.id %}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#cancelModal"
+                                    data-event-id="{{ event.id }}" data-event-name="{{ event.name }}">
+                                Cancel
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Bootstrap Modal -->
+        <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to cancel the event: <strong id="eventName"></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="cancelForm" method="post">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-outline-danger">Yes, Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // Pass data to the modal when the cancel button is clicked
+        const cancelModal = document.getElementById('cancelModal');
+        cancelModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Button that triggered the modal
+            const eventId = button.getAttribute('data-event-id'); // Extract event ID
+            const eventName = button.getAttribute('data-event-name'); // Extract event name
+
+            // Update the modal content
+            document.getElementById('eventName').textContent = eventName;
+
+            // Update the form action URL dynamically
+            const form = document.getElementById('cancelForm');
+            form.action = `{% url 'cancel_event' 0 %}`.replace('0', eventId);
+        });
+    </script>
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+{% endblock %}

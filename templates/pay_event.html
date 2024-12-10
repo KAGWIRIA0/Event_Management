@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    <title>Pay for Event</title>
+{% endblock %}
+
+{% block content %}
+    <h1 class="h3 mb-2 text-gray-800">Pay for Event: {{ transaction.event.event_name }}</h1>
+    <p>Event ID: {{ transaction.event_id }}</p>
+    <p>Client Phone: {{ transaction.client.profile.phone_number }}</p>
+    <p>Cost: {{ transaction.payment_amount }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Proceed to Pay</button>
+    </form>
+{% endblock %}
